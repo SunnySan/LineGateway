@@ -24,9 +24,9 @@ out.clear();	//注意，一定要有out.clear();，要不然client端無法解�
 /*********************開始做事吧*********************/
 JSONObject obj=new JSONObject();
 
-String src		= nullToString(request.getParameter("src"), "");
+String lineChannel		= nullToString(request.getParameter("lineChannel"), "");
 String sRecepientType		= nullToString(request.getParameter("type"), "");
-if (beEmpty(src) || beEmpty(sRecepientType)){
+if (beEmpty(lineChannel) || beEmpty(sRecepientType)){
 	obj.put("resultCode", gcResultCodeParametersNotEnough);
 	obj.put("resultText", gcResultTextParametersNotEnough);
 	out.print(obj);
@@ -41,7 +41,7 @@ Hashtable	ht					= new Hashtable();
 String		sResultCode			= gcResultCodeSuccess;
 String		sResultText			= gcResultTextSuccess;
 
-ht = getChannelProfile(src);
+ht = getChannelProfile(lineChannel);
 sResultCode = ht.get("ResultCode").toString();
 sResultText = ht.get("ResultText").toString();
 

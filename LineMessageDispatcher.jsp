@@ -24,9 +24,9 @@ out.clear();	//注意，一定要有out.clear();，要不然client端無法解�
 /*********************開始做事吧*********************/
 JSONObject obj=new JSONObject();
 
-String src		= nullToString(request.getParameter("src"), "");
+String lineChannel		= nullToString(request.getParameter("lineChannel"), "");
 
-if (beEmpty(src)){
+if (beEmpty(lineChannel)){
 	obj.put("resultCode", gcResultCodeParametersNotEnough);
 	obj.put("resultText", gcResultTextParametersNotEnough);
 	out.print(obj);
@@ -36,7 +36,7 @@ if (beEmpty(src)){
 
 String sSignature = nullToString(request.getHeader("X-Line-Signature"), "");
 writeLog("debug", "\n***********************************************************************************************");
-writeLog("debug", "Channel Name= " + src);
+writeLog("debug", "Channel Name= " + lineChannel);
 writeLog("debug", "X-Line-Signature= " + sSignature);
 
 String sSecretKey = "";
@@ -46,7 +46,7 @@ Hashtable	ht					= new Hashtable();
 String		sResultCode			= gcResultCodeSuccess;
 String		sResultText			= gcResultTextSuccess;
 
-ht = getChannelProfile(src);
+ht = getChannelProfile(lineChannel);
 sResultCode = ht.get("ResultCode").toString();
 sResultText = ht.get("ResultText").toString();
 
@@ -107,7 +107,7 @@ String	sResponse	= "";
 try
 {
 	URL u;
-	u = new URL(sServiceUrl);
+	u = new URL(sServiceUrl + lineChannel);
 	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
 	uc.setRequestProperty ("Content-Type", "application/json");
 	uc.setRequestProperty("contentType", "utf-8");
@@ -135,7 +135,8 @@ try
 	writeLog("error", "Exception when send message to channel server: " + e.toString());
 }
 
-if (notEmpty(sResponse) && sResponse.indexOf(gcResultCodeSuccess)>0 && sResponse.indexOf(gcResultTextSuccess)>0){
+//if (notEmpty(sResponse) && sResponse.indexOf(gcResultCodeSuccess)>0 && sResponse.indexOf(gcResultTextSuccess)>0){
+if (notEmpty(sResponse) && sResponse.indexOf(gcResultCodeSuccess)>0){
 	writeLog("info", "Successfully send request message to channel server!");
 }else{
 	writeLog("error", "Failed to send request message to channel server: " + sResponse);
